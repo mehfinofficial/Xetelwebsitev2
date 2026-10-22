@@ -1,0 +1,239 @@
+/* ==========================================================
+   Pricing page. Loads after style.css and reuses its tokens,
+   .feat-head, .faq and .cta. Only new pieces live here.
+   Currency is a data-cur attribute on <main>: CSS swaps the
+   prices, so there is no flash and nothing to re-render.
+   ========================================================== */
+
+main > section { position: relative; z-index: 1; }
+
+/* ---------- Hero: headline and one line, nothing else ---------- */
+.pr-hero { max-width: 760px; margin: 0 auto; padding: 120px 24px 0; text-align: center; }
+.pr-hero h1 {
+  font-family: var(--font-hero);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -.045em;
+  text-wrap: balance;
+  color: var(--ink-900);
+}
+.pr-hero > p { margin-top: 16px; font-size: clamp(1rem, 1.4vw, 1.1rem); line-height: 1.6; color: var(--ink-500); }
+
+/* ---------- Hero CTA (same look as the homepage hero button) ---------- */
+.pr-hero .actions { justify-content: center; margin-top: 28px; }
+.pr-hero .btn-dark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 30px;
+  line-height: 1.2;
+  background: linear-gradient(135deg, var(--teal-700), var(--teal-500));
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 6px 14px rgba(0, 109, 119, .18);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.pr-hero .btn-dark:hover { background: linear-gradient(135deg, var(--teal-800), var(--teal-600)); }
+.pr-hero .btn-dark:focus-visible { outline: 2px solid var(--teal-600); outline-offset: 3px; }
+.pr-hero .btn-dark::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.12) 30%, rgba(255,255,255,.55) 50%, rgba(255,255,255,.12) 70%, transparent 100%);
+  transform: translateX(-160%) skewX(-20deg);
+  animation: btn-shine 3s cubic-bezier(.4, 0, .2, 1) infinite;
+  pointer-events: none;
+}
+.pr-hero .btn-dark:hover .btn-circle svg { transform: translateX(2px); }
+.pr-hero .btn-dark:hover .btn-circle { transform: scale(1.06); }
+@media (min-width: 721px) {
+  .pr-hero .btn-circle { display: none; }
+  .pr-hero .btn-dark { gap: 0; }
+}
+
+/* ---------- Software picker: quiet text tabs on a hairline ---------- */
+.pr-plans { max-width: 1120px; margin: 0 auto; padding: 48px 24px 0; }
+.pr-chips {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  max-width: 820px;
+  margin: 0 auto;
+  border-bottom: 1px solid var(--border-glass);
+}
+.pr-chip {
+  position: relative;
+  padding: 0 0 16px;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--ink-500);
+  cursor: pointer;
+  transition: color .2s ease;
+}
+.pr-chip::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--teal-700);
+  transform: scaleX(0);
+  transition: transform .3s var(--ease);
+}
+.pr-chip[aria-pressed="true"] { color: var(--teal-700); font-weight: 600; }
+.pr-chip[aria-pressed="true"]::after { transform: scaleX(1); }
+@media (hover: hover) { .pr-chip[aria-pressed="false"]:hover { color: var(--ink-900); } }
+
+/* ---------- Currency: small segmented control under the tabs ---------- */
+.pr-cur {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: fit-content;
+  max-width: 100%;
+  margin: 28px auto 40px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(0, 57, 64, .06);
+}
+.pr-cur button {
+  padding: 9px 20px;
+  text-align: center;
+  white-space: nowrap;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font: inherit;
+  font-size: .86rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--ink-500);
+  cursor: pointer;
+  transition: background .25s ease, color .25s ease, box-shadow .25s ease;
+}
+.pr-cur button[aria-pressed="true"] { background: #fff; color: var(--ink-900); font-weight: 600; box-shadow: 0 1px 3px rgba(0, 57, 64, .14); }
+.pr-chip:focus-visible, .pr-cur button:focus-visible { outline: 2px solid var(--teal-600); outline-offset: 4px; border-radius: 6px; }
+.pr-cur button:focus-visible { border-radius: 999px; outline-offset: 2px; }
+
+/* ---------- Plans ---------- */
+.pr-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: stretch; }
+.pr-grid[hidden] { display: none; }
+
+.pr-card {
+  display: flex;
+  flex-direction: column;
+  padding: 36px 32px 32px;
+  border: 1px solid var(--border-glass);
+  border-radius: 24px;
+  background: var(--surface);
+  color: var(--ink-900);
+}
+.pr-card h2 { display: flex; align-items: center; gap: 10px; font-size: 1.15rem; font-weight: 600; line-height: 1.2; letter-spacing: -.02em; }
+.pr-tag { padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, .16); font-size: .78rem; font-weight: 500; letter-spacing: 0; }
+.pr-blurb { margin-top: 8px; font-size: .95rem; line-height: 1.5; color: var(--ink-700); }
+
+.pr-price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-top: 32px; }
+.pr-amt { font-family: var(--font-hero); font-size: clamp(2.4rem, 4vw, 3rem); font-weight: 700; line-height: 1; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.pr-per { font-size: .95rem; color: var(--ink-500); }
+.pr-gst { margin-top: 8px; font-size: .88rem; color: var(--ink-500); }
+
+/* currency swap */
+.c-usd { display: none; }
+main[data-cur="usd"] .c-inr { display: none; }
+main[data-cur="usd"] .c-usd { display: inline; }
+main[data-cur="usd"] .pr-gst { visibility: hidden; }
+
+.pr-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 28px;
+  padding: 14px 24px;
+  border: 1px solid var(--border-glass);
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ink-900);
+  transition: background .25s ease, border-color .25s ease, color .25s ease;
+}
+.pr-btn:focus-visible { outline: 2px solid var(--teal-600); outline-offset: 2px; }
+@media (hover: hover) { .pr-btn:hover { border-color: var(--teal-700); background: var(--teal-700); color: #fff; } }
+
+.pr-feats { list-style: none; margin: 32px 0 0; padding: 28px 0 0; border-top: 1px solid var(--border-glass); display: grid; gap: 14px; }
+.pr-feats li { position: relative; padding-left: 28px; font-size: .95rem; line-height: 1.4; color: var(--ink-700); }
+.pr-feats li::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: .32em;
+  width: 6px;
+  height: 11px;
+  border: solid var(--teal-600);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* The one strong element: the featured plan */
+.pr-card.is-pop { border-color: transparent; background: linear-gradient(160deg, var(--teal-800), var(--teal-600)); color: #fff; }
+.pr-card.is-pop .pr-blurb, .pr-card.is-pop .pr-feats li { color: rgba(255, 255, 255, .78); }
+.pr-card.is-pop .pr-per, .pr-card.is-pop .pr-gst { color: rgba(255, 255, 255, .62); }
+.pr-card.is-pop .pr-feats { border-top-color: rgba(255, 255, 255, .16); }
+.pr-card.is-pop .pr-feats li::before { border-color: #fff; }
+.pr-card.is-pop .pr-btn { border-color: transparent; background: #fff; color: var(--teal-800); }
+.pr-card.is-pop .pr-btn:focus-visible { outline-color: #fff; }
+@media (hover: hover) { .pr-card.is-pop .pr-btn:hover { background: var(--teal-100); color: var(--teal-800); } }
+
+/* ---------- FAQ ---------- */
+.pr-faq { padding-top: 112px; }
+.pr-faq .faq-list { max-width: 760px; margin-inline: auto; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 960px) {
+  .pr-chips { gap: 28px; }
+  .pr-grid { grid-template-columns: 1fr; max-width: 460px; margin: 0 auto; }
+}
+@media (max-width: 720px) {
+  .pr-hero { padding-top: 96px; }
+  .pr-hero .btn-dark { font-size: 1rem; padding: 12px 9px 12px 22px; gap: 11px; }
+  .pr-hero .btn-circle { width: 31px; height: 31px; }
+  .pr-hero .btn-circle svg { width: 15px; height: 15px; }
+  .pr-plans { padding-top: 36px; }
+  /* tabs become one swipeable row that bleeds to the screen edges */
+  .pr-chips {
+    justify-content: flex-start;
+    gap: 26px;
+    margin: 0 -24px;
+    padding: 0 24px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .pr-chips::-webkit-scrollbar { display: none; }
+  .pr-chip { flex: none; }
+  .pr-cur { margin: 24px auto 28px; }
+  .pr-cur button { padding: 9px 16px; }
+  .pr-card { padding: 30px 24px 26px; border-radius: 20px; }
+  .pr-faq { padding-top: 72px; }
+}
+
+@media (max-width: 380px) {
+  .pr-cur button { padding: 9px 11px; font-size: .8rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pr-chip, .pr-chip::after, .pr-cur button, .pr-btn { transition: none; }
+  .pr-hero .btn-dark::after { animation: none; display: none; }
+}

@@ -1,0 +1,343 @@
+/* ==========================================================
+   Softwares page. Loads after style.css and reuses its tokens
+   and sections: .feat-head, .ind-list, .ind-ico, .ind-cta,
+   .hero-trust, .faq and .cta. Only new pieces live here.
+   ========================================================== */
+
+/* style.css paints the soft page-top wash as a positioned main::before. Sections must be
+   positioned too, or that layer paints on top of the industry tiles that sit inside it. */
+main > section { position: relative; z-index: 1; }
+
+/* ---------- Hero: headline + search ---------- */
+.sw-hero {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 148px 24px 0;
+  text-align: center;
+}
+.sw-hero h1 {
+  font-family: var(--font-hero);
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -.04em;
+  text-wrap: balance;
+  color: var(--ink-900);
+}
+.sw-hero > p {
+  max-width: 520px;
+  margin: 22px auto 0;
+  font-size: clamp(1.05rem, 1.4vw, 1.15rem);
+  line-height: 1.65;
+  color: var(--ink-700);
+}
+.sw-hero .hero-trust { justify-content: center; margin-top: 28px; }
+
+.sw-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 560px;
+  height: 60px;
+  margin: 36px auto 0;
+  padding: 0 10px 0 22px;
+  background: var(--surface);
+  border: 1px solid var(--border-glass);
+  border-radius: 15px;
+  box-shadow: 0 14px 36px -14px rgba(0, 57, 64, .16);
+  transition: border-color .25s ease, box-shadow .25s ease;
+}
+.sw-search:focus-within {
+  border-color: rgba(0, 109, 119, .45);
+  box-shadow: 0 0 0 4px rgba(0, 109, 119, .1), 0 14px 36px -14px rgba(0, 57, 64, .2);
+}
+.sw-search > svg { flex: none; width: 20px; height: 20px; color: var(--ink-500); }
+.sw-search input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 1.05rem;
+  color: var(--ink-900);
+}
+.sw-search input::placeholder { color: var(--ink-500); opacity: .85; }
+.sw-clear {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--bg-alt);
+  color: var(--ink-700);
+  cursor: pointer;
+  transition: background .2s ease;
+}
+.sw-clear[hidden] { display: none; }
+.sw-clear svg { width: 16px; height: 16px; }
+.sw-clear:hover { background: var(--teal-100); }
+.sw-clear:focus-visible { outline: 2px solid var(--teal-600); outline-offset: 2px; }
+
+/* ---------- Hero CTA (same look as the homepage hero button) ---------- */
+.sw-hero .actions { margin-top: 28px; }
+.sw-hero .btn-dark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 30px;
+  line-height: 1.2;
+  background: linear-gradient(135deg, var(--teal-700), var(--teal-500));
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 6px 14px rgba(0, 109, 119, .18);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.sw-hero .btn-dark:hover { background: linear-gradient(135deg, var(--teal-800), var(--teal-600)); }
+.sw-hero .btn-dark::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.12) 30%, rgba(255,255,255,.55) 50%, rgba(255,255,255,.12) 70%, transparent 100%);
+  transform: translateX(-160%) skewX(-20deg);
+  animation: btn-shine 3s cubic-bezier(.4, 0, .2, 1) infinite;
+  pointer-events: none;
+}
+@media (min-width: 721px) {
+  .sw-hero .btn-circle { display: none; }
+  .sw-hero .btn-dark { gap: 0; }
+}
+
+/* ---------- Industry finder ---------- */
+.sw-finder { max-width: 1120px; margin: 0 auto; padding: 28px 24px 0; }
+
+.sw-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 28px; }
+.sw-chip {
+  padding: 9px 16px;
+  border: 1px solid var(--border-glass);
+  border-radius: 999px;
+  background: var(--surface);
+  font: inherit;
+  font-size: .92rem;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--ink-700);
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, color .2s ease;
+}
+.sw-chip[aria-pressed="true"] { background: var(--teal-700); border-color: var(--teal-700); color: #fff; }
+.sw-chip:focus-visible { outline: 2px solid var(--teal-600); outline-offset: 2px; }
+@media (hover: hover) {
+  .sw-chip[aria-pressed="false"]:hover { border-color: rgba(0, 109, 119, .35); color: var(--ink-900); }
+}
+
+/* ---------- Industry cards (image on top, name below) ---------- */
+.sw-cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+.sw-cards li[hidden] { display: none; }
+/* scroll reveal: card rises and scales in, its image settles from a soft zoom.
+   --d is a per-column delay set in main.js, so each row ripples in left to right. */
+.reveal-on .sw-cards li.reveal {
+  opacity: 0;
+  transform: translateY(22px) scale(.95);
+  transition: opacity .7s ease var(--d, 0ms), transform .9s var(--ease) var(--d, 0ms);
+}
+.reveal-on .sw-cards li.reveal.in { opacity: 1; transform: none; }
+.reveal-on .sw-cards li.reveal .sw-card-media img {
+  transform: scale(1.12);
+  transition: transform 1.2s var(--ease) var(--d, 0ms);
+}
+.reveal-on .sw-cards li.reveal.in .sw-card-media img { transform: scale(1); }
+
+/* Same look as the software type cards below: name and link on the left,
+   the picture on the right fading into the white card. */
+.sw-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  min-height: 150px;
+  background: var(--white);
+  border: 1px solid var(--border-glass);
+  border-radius: 20px;
+  overflow: hidden;
+  color: inherit;
+  transition: border-color .25s ease;
+}
+.sw-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(90deg, var(--white) 0%, var(--white) 36%, rgba(255, 255, 255, 0) 62%);
+}
+.sw-card:focus-visible { outline: 2px solid var(--teal-600); outline-offset: 2px; }
+
+.sw-card-media {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  display: grid;
+  place-items: center;
+  width: 64%;
+  background: #DFF2EC;
+  overflow: hidden;
+}
+.sw-card-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .6s var(--ease);
+}
+/* no image yet: the industry icon sits on the same mint panel */
+.sw-card-media--icon .ind-ico {
+  width: 56px;
+  height: 56px;
+  margin-left: 24%;
+  border-radius: 17px;
+  background: var(--surface);
+  box-shadow: 0 10px 24px -10px rgba(0, 57, 64, .22);
+}
+.sw-card-media--icon .ind-ico svg { width: 26px; height: 26px; }
+
+.sw-card-body { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: flex-start; width: 56%; padding: 26px 0 26px 24px; }
+.sw-card-name { font-size: 1.15rem; font-weight: 600; line-height: 1.25; letter-spacing: -.02em; color: var(--ink-900); text-wrap: balance; }
+.sw-card-text { margin-top: 8px; font-size: .9rem; line-height: 1.5; color: var(--ink-700); }
+.sw-card-link { display: inline-flex; margin-top: 18px; align-items: center; gap: 6px; font-size: .95rem; font-weight: 600; line-height: 1; letter-spacing: -.01em; color: var(--teal-700); }
+.sw-card-link svg { width: 16px; height: 16px; transition: transform .3s var(--ease); }
+@media (hover: hover) {
+  .sw-card:hover { border-color: rgba(0, 109, 119, .3); }
+  .sw-card:hover .sw-card-media img { transform: scale(1.05); }
+  .sw-card:hover .sw-card-link svg { transform: translateX(3px); }
+}
+
+.sw-empty { max-width: 440px; margin: 0 auto; padding: 36px 0 4px; text-align: center; }
+.sw-empty[hidden] { display: none; }
+.sw-empty p { font-size: 1.05rem; line-height: 1.6; color: var(--ink-700); }
+.sw-empty p + p { margin-top: 8px; font-size: .98rem; color: var(--ink-500); }
+.sw-empty strong { font-weight: 600; color: var(--ink-900); overflow-wrap: anywhere; }
+.sw-empty a { font-weight: 600; color: var(--teal-700); text-decoration: underline; text-decoration-color: rgba(0, 109, 119, .3); text-underline-offset: 4px; transition: text-decoration-color .25s ease; }
+.sw-empty a:hover { text-decoration-color: currentColor; }
+.ind-cta[hidden] { display: none; }
+
+/* ---------- Browse by software ---------- */
+.sw-products, .sw-core { max-width: 1120px; margin: 0 auto; padding: 112px 24px 0; }
+
+/* Software cells: the homepage feature layout (style.css .feat-grid / .feat-item).
+   Text on the left, the picture fades in from the right, a round arrow shows it is a link. */
+.sw-types { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.sw-types .feat-item:last-child { grid-column: auto; }
+.sw-type { color: inherit; }
+.sw-type .feat-art { width: 66%; background: #DFF2EC; }
+.sw-type .feat-art img { transition: transform .6s var(--ease); }
+.sw-type::after { background: linear-gradient(90deg, var(--white) 0%, var(--white) 34%, rgba(255, 255, 255, 0) 60%); }
+/* text block is centred vertically in the card, and the arrow sits right under the text
+   with a fixed gap (no margin-top:auto), so button + text read as one group */
+.sw-type .feat-body { display: flex; flex: 1; flex-direction: column; align-items: flex-start; justify-content: center; width: 58%; padding: 26px 0 26px 28px; }
+.sw-type .feat-body p { margin-bottom: 0; }
+.sw-type-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 26px; font-size: .95rem; font-weight: 600; line-height: 1; letter-spacing: -.01em; color: var(--teal-700); }
+.sw-type-link svg { width: 16px; height: 16px; transition: transform .3s var(--ease); }
+.sw-type:focus-visible { outline: 2px solid var(--teal-600); outline-offset: -2px; }
+@media (hover: hover) {
+  .sw-type:hover .feat-art img { transform: scale(1.04); }
+  .sw-type:hover .sw-type-link svg { transform: translateX(3px); }
+}
+@media (max-width: 720px) {
+  .sw-types { grid-template-columns: 1fr; }
+  .sw-type .feat-art { width: 62%; }
+  .sw-type .feat-body { width: 58%; padding: 22px 0 22px 20px; }
+  .sw-type-link { margin-top: 20px; font-size: .92rem; }
+}
+
+/* ---------- Core features (open layout, no boxes) ---------- */
+.sw-core-grid {
+  list-style: none;
+  padding: 0 28px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 52px 48px;
+}
+.sw-core-grid .ind-ico { width: 38px; height: 38px; margin-bottom: 14px; }
+.sw-core-grid .ind-ico svg { width: 18px; height: 18px; }
+.sw-core-grid h3 { font-size: 1.05rem; font-weight: 600; line-height: 1.25; letter-spacing: -.02em; color: var(--ink-900); }
+.sw-core-grid p { max-width: 34ch; margin-top: 6px; font-size: .9rem; line-height: 1.55; color: var(--ink-700); }
+
+/* FAQ comes from style.css; it only needs breathing room above it here */
+.sw-faq { padding-top: 112px; }
+/* same width and side inset as the cards and features above, so every section lines up */
+.sw-faq .faq-list { max-width: none; padding: 0 28px; }
+
+/* ---------- Tablet ---------- */
+@media (max-width: 960px) {
+  .sw-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .sw-core-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 44px 40px; }
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 720px) {
+  .sw-hero { padding-top: 96px; }
+  .sw-search { height: 54px; margin-top: 28px; padding-left: 18px; }
+  .sw-hero .btn-dark { font-size: 1rem; padding: 12px 9px 12px 22px; gap: 11px; }
+  .sw-hero .btn-circle { width: 31px; height: 31px; }
+  .sw-hero .btn-circle svg { width: 15px; height: 15px; }
+
+  .sw-finder { padding-top: 22px; }
+  /* chips become one swipeable row that bleeds to the screen edges */
+  .sw-chips {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    margin: 0 -24px 22px;
+    padding: 0 24px 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .sw-chips::-webkit-scrollbar { display: none; }
+  .sw-chip { flex: none; }
+  .sw-cards { grid-template-columns: 1fr; gap: 12px; }
+  .sw-card { min-height: 128px; border-radius: 16px; }
+  .sw-card-body { width: 60%; padding: 20px 0 20px 20px; }
+  .sw-card-text { margin-top: 6px; font-size: .86rem; }
+  .sw-card-name { font-size: 1.08rem; }
+  .sw-card-link { margin-top: 14px; font-size: .92rem; }
+  .sw-card-media--icon .ind-ico { width: 48px; height: 48px; border-radius: 15px; }
+  .sw-card-media--icon .ind-ico svg { width: 22px; height: 22px; }
+  /* industry cards: smaller image, shifted right */
+  .sw-card-media { width: 50%; }
+  .sw-card::after { background: linear-gradient(90deg, var(--white) 0%, var(--white) 46%, rgba(255, 255, 255, 0) 72%); }
+  .sw-card-body { width: 58%; }
+  .sw-card-media--icon .ind-ico { margin-left: 18%; }
+
+  .sw-products, .sw-core { padding-top: 72px; }
+  .sw-faq { padding-top: 72px; }
+  .sw-faq .faq-list { padding: 0 20px; }
+
+  .sw-core-grid { grid-template-columns: 1fr; gap: 26px; padding: 0 20px; }
+  .sw-core-grid li { display: grid; grid-template-columns: 38px minmax(0, 1fr); column-gap: 14px; align-items: start; }
+  .sw-core-grid .ind-ico { grid-row: 1 / span 2; margin: 0; }
+  .sw-core-grid p { margin-top: 3px; max-width: none; font-size: .88rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sw-hero .btn-dark::after { animation: none; display: none; }
+  .sw-search, .sw-chip, .sw-clear, .sw-card, .sw-card-media img, .sw-card-link svg, .sw-type .feat-art img, .sw-empty a { transition: none; }
+}
