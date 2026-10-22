@@ -214,10 +214,6 @@ main > section, main > article { position: relative; z-index: 1; }
 .wn-more { max-width: 1120px; margin: 0 auto; padding: 96px 24px 0; }
 .wn-more h2 { margin-bottom: 28px; font-size: clamp(1.5rem, 3vw, 2rem); letter-spacing: -.03em; color: var(--ink-900); }
 
-/* space above the CTA, below the feed / article */
-main > .cta { margin-top: 112px; }
-main > .cta .cta-card { margin-bottom: 0; }
-
 /* ---------- Responsive ---------- */
 @media (max-width: 960px) {
   .wn-grid > li.is-lead .wn-card { flex-direction: column; }
@@ -244,7 +240,6 @@ main > .cta .cta-card { margin-bottom: 0; }
   .wn-body { margin-top: 32px; }
   .wn-body h2 { margin-top: 32px; font-size: 1.2rem; }
   .wn-more { padding-top: 72px; }
-  main > .cta { margin-top: 72px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

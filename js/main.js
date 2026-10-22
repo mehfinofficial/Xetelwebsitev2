@@ -8,6 +8,8 @@
   var heroCta = document.querySelector('.hero .btn-dark, .sw-hero .btn-dark');
   // any page can name its own trigger: the header CTA appears once this element has scrolled away
   var anchor = document.querySelector('[data-cta-anchor]');
+  // true while the footer call to action is on screen (the header CTA would only repeat it)
+  var ftVisible = false;
 
   // stagger the dropdown items (capped so long lists don't drag)
   groups.forEach(function (g) {
@@ -20,16 +22,33 @@
   function onScroll() {
     // inner pages have no hero: keep the header "Book a demo" visible there instead of crashing
     var ref = anchor || hero;
-    header.classList.toggle('scrolled', ref ? ref.getBoundingClientRect().bottom < 100 : true);
+    header.classList.toggle('scrolled', !ftVisible && (ref ? ref.getBoundingClientRect().bottom < 100 : true));
     // mobile: transparent header at the very top, glass once scrolling starts
     header.classList.toggle('is-scrolled', window.scrollY > 4);
     // mobile: show the header CTA only once the hero CTA has scrolled out of view
     var mobRef = anchor || heroCta;
-    if (mobRef) header.classList.toggle('show-mobile-cta', mobRef.getBoundingClientRect().bottom < 64);
-    else if (!hero) header.classList.add('show-mobile-cta');
+    var mobShow = mobRef ? mobRef.getBoundingClientRect().bottom < 64 : !hero;
+    header.classList.toggle('show-mobile-cta', !ftVisible && mobShow);
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
+
+  // hide the header CTA while the footer CTA (its heading or buttons) is in view.
+  // rootMargin: ignore the strip behind the fixed header, so it only counts once it is really visible
+  var ftTargets = Array.prototype.slice.call(document.querySelectorAll('.ft-cta h2, .ft-actions'));
+  if (ftTargets.length && 'IntersectionObserver' in window) {
+    var ftSeen = [];
+    var ftObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var i = ftSeen.indexOf(en.target);
+        if (en.isIntersecting && i === -1) ftSeen.push(en.target);
+        else if (!en.isIntersecting && i !== -1) ftSeen.splice(i, 1);
+      });
+      ftVisible = ftSeen.length > 0;
+      onScroll();
+    }, { rootMargin: '-72px 0px 0px 0px' });
+    ftTargets.forEach(function (t) { ftObserver.observe(t); });
+  }
 
   function openPanel(name) {
     header.classList.add('open');
